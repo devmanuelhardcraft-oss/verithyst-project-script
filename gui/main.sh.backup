@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+
+BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+SCRIPT_DIR="$BASE_DIR/scripts"
+LOG_DIR="$BASE_DIR/logs"
+
+source "$BASE_DIR/gui/functions.sh"
+source "$BASE_DIR/gui/colors.sh"
+
+
+while true
+do
+
+clear
+
+show_logo
+
+echo
+echo "================================="
+echo "       VERITHYST INSTALLER"
+echo "================================="
+echo
+echo "1) Komplettinstallation"
+echo "2) Gaming Setup"
+echo "3) Programme installieren"
+echo "4) Flatpaks installieren"
+echo "5) Treiber installieren"
+echo "6) Kernel installieren"
+echo "7) System optimieren"
+echo "8) Updates"
+echo "9) Aufräumen"
+echo "0) Beenden"
+echo
+
+read -p "Auswahl: " OPTION
+
+
+case $OPTION in
+
+1)
+bash "$SCRIPT_DIR/repos.sh"
+bash "$SCRIPT_DIR/update.sh"
+bash "$SCRIPT_DIR/packages.sh"
+bash "$SCRIPT_DIR/gaming.sh"
+bash "$SCRIPT_DIR/drivers.sh"
+bash "$SCRIPT_DIR/kernels.sh"
+bash "$SCRIPT_DIR/flatpaks.sh"
+bash "$SCRIPT_DIR/codecs.sh"
+bash "$SCRIPT_DIR/optimize.sh"
+bash "$SCRIPT_DIR/finish.sh"
+;;
+
+2)
+bash "$SCRIPT_DIR/gaming.sh"
+;;
+
+3)
+bash "$SCRIPT_DIR/packages.sh"
+;;
+
+4)
+bash "$SCRIPT_DIR/flatpaks.sh"
+;;
+
+5)
+bash "$SCRIPT_DIR/drivers.sh"
+;;
+
+6)
+bash "$SCRIPT_DIR/kernels.sh"
+;;
+
+7)
+bash "$SCRIPT_DIR/optimize.sh"
+;;
+
+8)
+bash "$SCRIPT_DIR/update.sh"
+;;
+
+9)
+bash "$SCRIPT_DIR/cleanup.sh"
+;;
+
+0)
+echo "Verithyst beendet."
+exit 0
+;;
+
+*)
+echo "Ungültige Auswahl"
+sleep 2
+;;
+
+esac
+
+done

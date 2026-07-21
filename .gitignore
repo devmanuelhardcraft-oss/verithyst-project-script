@@ -1,0 +1,13 @@
+logs/
+cache/
+temp/
+downloads/
+backups/
+
+*.log
+*.iso
+*.img
+*.rpm
+*.src.rpm
+
+__pycache__/
