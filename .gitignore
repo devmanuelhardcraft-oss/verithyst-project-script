@@ -11,3 +11,4 @@ backups/
 *.src.rpm
 
 __pycache__/
+scripts.old/
