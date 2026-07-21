@@ -48,7 +48,7 @@ check_internet()
         exit 1
     fi
 }
-
+source "$BASE_DIR/scripts/functions.sh"
 
 install_dependencies()
 {

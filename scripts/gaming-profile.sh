@@ -21,19 +21,23 @@ goverlay \
 gamescope \
 vkBasalt \
 vulkan-tools \
-libgamemode
+--skip-unavailable || true
 
 
-echo "[+] Aktiviere GameMode..."
+echo "[+] Prüfe GameMode..."
 
-systemctl enable --now gamemoded.service || true
+if systemctl list-unit-files | grep -q gamemoded; then
+    systemctl enable --now gamemoded.service || true
+else
+    echo "GameMode Dienst nicht als Systemdienst vorhanden"
+fi
 
 
 echo "[+] Erstelle MangoHUD Standardprofil..."
 
 mkdir -p /etc/MangoHud
 
-cat > /etc/MangoHud/MangoHud.conf <<EOF
+cat > /etc/MangoHud/MangoHud.conf <<MANGOEOF
 fps
 frametime
 cpu_stats
@@ -44,14 +48,29 @@ ram
 vram
 position=top-left
 toggle_hud=F12
-EOF
+MANGOEOF
+
+
+echo "[+] Erstelle Benutzer MangoHUD Profil..."
+
+if [ -n "$SUDO_USER" ]; then
+
+    USER_HOME=$(eval echo "~$SUDO_USER")
+
+    mkdir -p "$USER_HOME/.config/MangoHud"
+
+    cp /etc/MangoHud/MangoHud.conf \
+    "$USER_HOME/.config/MangoHud/MangoHud.conf"
+
+    chown -R "$SUDO_USER:$SUDO_USER" \
+    "$USER_HOME/.config/MangoHud"
+
+fi
 
 
 echo "[+] Aktiviere CPU Performance Einstellungen..."
 
-mkdir -p /etc/systemd/system
-
-cat > /etc/systemd/system/verithyst-gaming.service <<EOF
+cat > /etc/systemd/system/verithyst-gaming.service <<SERVICEEOF
 [Unit]
 Description=Verithyst Gaming Optimierungen
 After=multi-user.target
@@ -63,7 +82,7 @@ RemainAfterExit=yes
 
 [Install]
 WantedBy=multi-user.target
-EOF
+SERVICEEOF
 
 
 systemctl daemon-reload

@@ -3,8 +3,16 @@
 set -e
 
 echo "================================="
-echo " Verithyst: Gaming Setup"
+echo " Verthyst: Gaming Setup"
 echo "================================="
+
+if [ -n "$SUDO_USER" ]; then
+    GAMING_USER="$SUDO_USER"
+else
+    GAMING_USER="$USER"
+fi
+
+USER_HOME=$(eval echo "~$GAMING_USER")
 
 
 echo "[+] Installiere Gaming-Pakete..."
@@ -54,22 +62,16 @@ EOF
 
 
 
-echo "[+] Erstelle Benutzer Gaming-Verzeichnisse..."
+echo "[+] Erstelle Benutzer Gaming-Konfiguration..."
 
-
-for USER_HOME in /home/*
-do
-
-if [ -d "$USER_HOME" ]
-then
-
-USER=$(basename "$USER_HOME")
 
 mkdir -p "$USER_HOME/.config/MangoHud"
 mkdir -p "$USER_HOME/.config/gamemode"
 
+
 cp /etc/MangoHud/MangoHud.conf \
-"$USER_HOME/.config/MangoHud/MangoHud.conf" || true
+"$USER_HOME/.config/MangoHud/MangoHud.conf"
+
 
 
 cat > "$USER_HOME/.config/gamemode/gamemode.ini" <<EOF
@@ -84,31 +86,26 @@ apply_gpu_optimisations=yes
 EOF
 
 
-chown -R "$USER:$USER" \
+
+echo "[+] Bereinige Benutzerrechte..."
+
+chown -R "$GAMING_USER:$GAMING_USER" \
 "$USER_HOME/.config/MangoHud" \
-"$USER_HOME/.config/gamemode" 2>/dev/null || true
-
-fi
-
-done
+"$USER_HOME/.config/gamemode"
 
 
 
-echo "[+] Proton Verzeichnis vorbereiten..."
-
-for USER_HOME in /home/*
-do
-
-if [ -d "$USER_HOME" ]
-then
+echo "[+] Steam Verzeichnis vorbereiten..."
 
 mkdir -p "$USER_HOME/.steam/root/compatibilitytools.d"
 
-fi
-
-done
+chown -R "$GAMING_USER:$GAMING_USER" \
+"$USER_HOME/.steam"
 
 
 
 echo
 echo "[OK] Gaming Setup fertig"
+echo
+echo "Starte Steam bitte als normaler Benutzer:"
+echo "steam"
