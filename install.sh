@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# Verithyst Installer
-# Hauptstarter
-
 set -e
 
 VERSION="1.0"
@@ -22,7 +19,7 @@ exec > >(tee -a "$LOGFILE") 2>&1
 
 
 echo "================================="
-echo "      VERITHYST INSTALLER"
+echo "      VERTHYST-SCRIPT INSTALLER"
 echo "      Version $VERSION"
 echo "================================="
 
@@ -31,7 +28,8 @@ check_root()
 {
     if [ "$EUID" -ne 0 ]; then
         echo "Starte mit sudo..."
-        exec sudo "$0" "$@"
+
+        exec sudo bash "$BASE_DIR/install.sh" "$@"
     fi
 }
 
@@ -48,7 +46,7 @@ check_internet()
         exit 1
     fi
 }
-source "$BASE_DIR/scripts/functions.sh"
+
 
 install_dependencies()
 {
@@ -63,7 +61,6 @@ install_dependencies()
     unzip \
     tar \
     rsync
-
 }
 
 
@@ -81,7 +78,7 @@ load_gui()
 
 main()
 {
-    check_root
+    check_root "$@"
 
     check_internet
 
