@@ -1,118 +1,170 @@
-Verthyst-Script
-English
-Verthyst-Script - Gaming Linux Setup Toolkit
+# Verthyst-Script
 
-Verthyst-Script is a Linux gaming setup and system optimization toolkit designed to automate the installation and configuration of a complete gaming environment.
+## Gaming Linux Setup Toolkit
 
-The project provides modular scripts for installing software, managing drivers, configuring kernels, optimizing the system and preparing Linux systems for gaming.
+Verthyst-Script is a modular Linux gaming setup and system optimization toolkit.
 
-Features
-Interactive terminal installer
-German and English language support
-Gaming software installation
-Flatpak management
-Driver installation tools
-Kernel management
-System optimization
-Gaming performance configuration
-GameMode support
-MangoHUD support
-Vulkan tools
-Automated maintenance scripts
-Supported Systems
+It provides automated scripts to configure a complete gaming environment on Linux.
 
-Primary target:
+---
 
-Fedora Linux
-Fedora-based distributions
+# Features
 
-Other distributions may work, but are not officially supported.
+- Interactive terminal installer
+- English and German language support
+- Gaming software installation
+- Flatpak management
+- Driver installation
+- Kernel management
+- System optimization
+- Gaming performance tuning
+- GameMode support
+- MangoHUD support
+- Vulkan tools
+- Automated maintenance scripts
 
-Installation
+---
+
+# Supported Systems
+
+Officially supported:
+
+- Fedora Linux
+- Fedora-based distributions
+
+Other distributions may work but are not officially supported.
+
+---
+
+# Installation
 
 Clone the repository:
 
+```bash
 git clone https://github.com/devmanuelhardcraft-oss/verithyst-project-script.git
+```
 
 Enter the project directory:
 
+```bash
 cd verithyst-project-script
+```
 
 Start the installer:
 
+```bash
 sudo bash install.sh
-Project Structure
-gui/             Installer interface
-scripts/         Main system scripts
-drivers/         Driver management
-kernels/         Kernel tools
-flatpaks/        Flatpak modules
-packages/        Custom packages
-translations/    Language files
-config/          Configuration files
-License
+```
 
-This project is released under a custom non-commercial license.
+---
 
-Commercial use, redistribution, modification or derivative projects require explicit permission from the creator.
+# Project Structure
 
-See LICENSE for details.
+```
+verithyst-project-script/
 
-Deutsch
-Verthyst-Script - Gaming Linux Setup Werkzeug
+├── gui/              Installer interface
+├── scripts/          System scripts
+├── drivers/          Driver management
+├── kernels/          Kernel tools
+├── flatpaks/         Flatpak modules
+├── packages/         Custom packages
+├── translations/     Language files
+└── config/           Configuration files
+```
 
-Verthyst-Script ist ein Linux Gaming Setup- und Systemoptimierungswerkzeug zur automatisierten Einrichtung einer Gaming-Umgebung.
+---
 
-Das Projekt stellt modulare Scripts bereit, um Programme zu installieren, Treiber zu verwalten, Kernel einzurichten und Linux-Systeme für Gaming zu optimieren.
+# Development
 
-Funktionen
-Interaktiver Terminal Installer
-Deutsche und englische Sprache
-Gaming Software Installation
-Flatpak Verwaltung
-Treiber Werkzeuge
-Kernel Verwaltung
-System Optimierung
-Gaming Performance Einstellungen
-GameMode Unterstützung
-MangoHUD Unterstützung
-Vulkan Werkzeuge
-Automatische Wartungsscripts
-Unterstützte Systeme
+Reset saved language:
 
-Hauptziel:
+```bash
+rm -f config/language
+```
 
-Fedora Linux
-Fedora-basierte Distributionen
+Run installer:
+
+```bash
+sudo bash install.sh
+```
+
+---
+
+# License
+
+Verthyst-Script uses a custom non-commercial license.
+
+Commercial use, redistribution, modification or creating derivative projects is not allowed without permission from the creator.
+
+See the LICENSE file for details.
+
+---
+
+# Deutsch
+
+## Gaming Linux Setup Werkzeug
+
+Verthyst-Script ist ein modulares Linux Gaming Setup- und Systemoptimierungswerkzeug.
+
+Es stellt automatisierte Scripts zur Einrichtung und Optimierung einer Linux Gaming Umgebung bereit.
+
+---
+
+# Funktionen
+
+- Interaktiver Terminal Installer
+- Deutsch und Englisch Unterstützung
+- Gaming Software Installation
+- Flatpak Verwaltung
+- Treiber Installation
+- Kernel Verwaltung
+- System Optimierung
+- Gaming Performance Optimierung
+- GameMode Unterstützung
+- MangoHUD Unterstützung
+- Vulkan Werkzeuge
+- Automatische Wartungsscripts
+
+---
+
+# Unterstützte Systeme
+
+Offiziell unterstützt:
+
+- Fedora Linux
+- Fedora-basierte Distributionen
 
 Andere Distributionen können funktionieren, werden aber nicht offiziell unterstützt.
 
-Installation
+---
+
+# Installation
 
 Repository klonen:
 
+```bash
 git clone https://github.com/devmanuelhardcraft-oss/verithyst-project-script.git
+```
 
 Projektordner öffnen:
 
+```bash
 cd verithyst-project-script
+```
 
 Installer starten:
 
+```bash
 sudo bash install.sh
-Projektstruktur
-gui/             Installer Oberfläche
-scripts/         Haupt-Systemscripts
-drivers/         Treiberverwaltung
-kernels/         Kernel Werkzeuge
-flatpaks/        Flatpak Module
-packages/        Eigene Pakete
-translations/    Sprachdateien
-config/          Konfiguration
-Lizenz
+```
 
-Dieses Projekt steht unter einer eigenen nicht-kommerziellen Lizenz.
+---
 
-Kommerzielle Nutzung, Weiterverteilung, Änderungen oder abgeleitete Projekte benötigen eine ausdrückliche Genehmigung des Erstellers.
+# Lizenz
 
-Details stehen in der LICENSE Datei.
+Verthyst-Script verwendet eine eigene nicht-kommerzielle Lizenz.
+
+Kommerzielle Nutzung, Weitergabe, Änderungen oder abgeleitete Projekte sind ohne Genehmigung des Erstellers nicht erlaubt.
+
+Details befinden sich in der Datei LICENSE.
