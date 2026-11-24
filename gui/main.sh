@@ -1,22 +1,33 @@
 #!/usr/bin/env bash
+set -Eeuo pipefail
 
-BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-
-# Sprache laden
-source "$BASE_DIR/scripts/language.sh"
+BASE_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd -P)"
+source "$BASE_DIR/environment.sh"
+source "$VERTHYST_SCRIPTS_DIR/language.sh"
 
 RED="\033[1;31m"
 BOLD="\033[1m"
 UNDER="\033[4m"
 RESET="\033[0m"
 
+run_module() {
+    local path="$1"
+    if [[ ! -f "$path" ]]; then
+        echo "[FEHLER] Modul nicht gefunden: $path" >&2
+        read -r -p "ENTER zum Menü..." _ || true
+        return 0
+    fi
+    bash "$path" || {
+        local status=$?
+        echo "[FEHLER] Modul mit Exit-Code $status beendet." >&2
+        read -r -p "ENTER zum Menü..." _ || true
+    }
+    return 0
+}
 
-while true
-do
-
-clear
-
-echo "
+while true; do
+    clear
+    cat <<EOF
 ██╗   ██╗███████╗██████╗ ████████╗██╗  ██╗██╗   ██╗███████╗████████╗
 ██║   ██║██╔════╝██╔══██╗╚══██╔══╝██║  ██║╚██╗ ██╔╝██╔════╝╚══██╔══╝
 ██║   ██║█████╗  ██████╔╝   ██║   ███████║ ╚████╔╝ ███████╗   ██║
@@ -25,10 +36,7 @@ echo "
   ╚═══╝  ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝   ╚═╝   ╚══════╝   ╚═╝
 
                      $SUBTITLE
-"
 
-
-echo "
 =================================
        $TITLE
 =================================
@@ -45,79 +53,26 @@ echo "
 
 10) $MENU_10
 11) $MENU_11
-"
+12) $MENU_12
+EOF
+    echo -e "${RED}${BOLD}${UNDER}0) $EXIT${RESET}"
+    echo
 
-echo -e "${RED}${BOLD}${UNDER}0) $EXIT${RESET}"
-
-echo
-
-read -p "$SELECT " choice
-
-
-case $choice in
-
-1)
-bash "$BASE_DIR/scripts/full-install.sh"
-;;
-
-2)
-bash "$BASE_DIR/scripts/gaming.sh"
-;;
-
-3)
-bash "$BASE_DIR/scripts/programs.sh"
-;;
-
-4)
-bash "$BASE_DIR/flatpaks/flatpak.sh"
-;;
-
-5)
-bash "$BASE_DIR/drivers/driver.sh"
-;;
-
-6)
-clear
-echo "$START_KERNEL"
-bash "$BASE_DIR/kernels/kernel.sh"
-;;
-
-7)
-clear
-echo "$START_OPTIMIZATION"
-bash "$BASE_DIR/scripts/optimization.sh"
-;;
-
-8)
-clear
-echo "$START_UPDATE"
-bash "$BASE_DIR/scripts/update.sh"
-;;
-
-9)
-clear
-echo "$START_CLEANUP"
-bash "$BASE_DIR/scripts/cleanup.sh"
-;;
-
-10)
-systemctl reboot
-;;
-
-11)
-systemctl poweroff
-;;
-
-0)
-echo "$EXIT"
-exit 0
-;;
-
-*)
-echo "$INVALID"
-sleep 2
-;;
-
-esac
-
+    read -r -p "$SELECT " choice || exit 0
+    case "$choice" in
+        1) run_module "$VERTHYST_SCRIPTS_DIR/full-install.sh" ;;
+        2) run_module "$VERTHYST_SCRIPTS_DIR/gaming.sh" ;;
+        3) run_module "$VERTHYST_SCRIPTS_DIR/packages.sh" ;;
+        4) run_module "$VERTHYST_ROOT/flatpaks/flatpak.sh" ;;
+        5) run_module "$VERTHYST_ROOT/drivers/driver.sh" ;;
+        6) run_module "$VERTHYST_KERNELS_DIR/kernel.sh" ;;
+        7) run_module "$VERTHYST_SCRIPTS_DIR/optimization.sh" ;;
+        8) run_module "$VERTHYST_SCRIPTS_DIR/update.sh" ;;
+        9) run_module "$VERTHYST_SCRIPTS_DIR/cleanup.sh" ;;
+        10) read -r -p "System wirklich neu starten? [j/N] " answer; [[ "$answer" =~ ^([jJ]|[jJ][aA])$ ]] && systemctl reboot ;;
+        11) read -r -p "System wirklich herunterfahren? [j/N] " answer; [[ "$answer" =~ ^([jJ]|[jJ][aA])$ ]] && systemctl poweroff ;;
+        12) run_module "$VERTHYST_SCRIPTS_DIR/diagnostics.sh" ;;
+        0) echo "$EXIT"; exit 0 ;;
+        *) echo "$INVALID"; sleep 2 ;;
+    esac
 done

@@ -22,6 +22,8 @@ It provides automated scripts to configure a complete gaming environment on Linu
 - MangoHUD support
 - Vulkan tools
 - Automated maintenance scripts
+- System diagnostics
+- Safer update, cleanup and optimization workflows
 
 ---
 
@@ -53,7 +55,7 @@ cd verithyst-project-script
 Start the installer:
 
 ```bash
-sudo bash install.sh
+bash install.sh
 ```
 
 ---
@@ -86,7 +88,7 @@ rm -f config/language
 Run installer:
 
 ```bash
-sudo bash install.sh
+bash install.sh
 ```
 
 ---
@@ -156,7 +158,7 @@ cd verithyst-project-script
 Installer starten:
 
 ```bash
-sudo bash install.sh
+bash install.sh
 ```
 
 ---
