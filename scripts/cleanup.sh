@@ -27,7 +27,7 @@ echo "[+] Bereinige nicht verwendete Flatpaks..."
 if command -v flatpak >/dev/null 2>&1; then
     flatpak uninstall --unused -y || true
     if command -v runuser >/dev/null 2>&1; then
-        runuser -u "$VERTHYST_USER" -- flatpak --user uninstall --unused -y || true
+        runuser -u "$VERTHYST_USER" -- env HOME="$VERTHYST_HOME" flatpak --user uninstall --unused -y || true
     fi
 fi
 
