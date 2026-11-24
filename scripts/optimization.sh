@@ -1,85 +1,44 @@
 #!/usr/bin/env bash
+set -Eeuo pipefail
 
-set -e
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
+source "$(dirname -- "$SCRIPT_DIR")/environment.sh"
 
-echo "================================="
-echo " Verithyst System Optimierung"
-echo "================================="
-
-if [ "$EUID" -ne 0 ]; then
-    echo "Bitte mit sudo starten"
+if [[ $EUID -ne 0 ]]; then
+    echo "Bitte mit sudo starten" >&2
+    exit 1
+fi
+if ! command -v dnf >/dev/null 2>&1; then
+    echo "[FEHLER] DNF wurde nicht gefunden." >&2
     exit 1
 fi
 
+echo "================================="
+echo " Verthyst System-Optimierung"
+echo "================================="
+echo "Die Optimierung installiert Diagnose-/Wartungstools und aktiviert TRIM."
+echo "Bestehende Energieprofile und Kernel-Parameter werden nicht überschrieben."
+read -r -p "Fortfahren? [j/N] " answer
+[[ "$answer" =~ ^([jJ]|[jJ][aA])$ ]] || { echo "Abgebrochen."; exit 0; }
 
-echo "[+] Aktiviere Systemdienste..."
+echo "[+] Installiere unterstützende Werkzeuge..."
+dnf install -y irqbalance tuned
 
-systemctl enable fstrim.timer || true
+echo "[+] Aktiviere periodisches SSD-TRIM..."
+systemctl enable --now fstrim.timer
 
+echo "[+] Aktiviere IRQ-Balance (falls vom System unterstützt)..."
+systemctl enable --now irqbalance.service || echo "[INFO] irqbalance konnte auf diesem System nicht aktiviert werden."
 
-echo "[+] Prüfe Power Profile Konflikt..."
-
-if rpm -q power-profiles-daemon >/dev/null 2>&1; then
-    echo "Entferne power-profiles-daemon wegen tuned-ppd Konflikt..."
-    dnf remove -y power-profiles-daemon || true
+echo
+echo "Aktuelles Energieprofil:"
+if command -v powerprofilesctl >/dev/null 2>&1; then
+    powerprofilesctl get || true
+fi
+if command -v tuned-adm >/dev/null 2>&1; then
+    tuned-adm active || true
 fi
 
-
-echo "[+] Installiere Optimierungstools..."
-
-dnf install -y \
-irqbalance \
-tuned \
-tuned-ppd \
-zram-generator \
---allowerasing
-
-
-echo "[+] Aktiviere IRQ Balance..."
-
-systemctl enable --now irqbalance || true
-
-
-echo "[+] Aktiviere Tuned..."
-
-systemctl enable --now tuned || true
-
-
-echo "[+] Setze Performance Profil..."
-
-tuned-adm profile throughput-performance || true
-
-
-echo "[+] Aktiviere ZRAM..."
-
-systemctl enable --now systemd-zram-setup@zram0.service || true
-
-
-echo "[+] Erstelle Kernel Optimierungen..."
-
-
-cat > /etc/sysctl.d/99-verithyst.conf <<SYSCTL
-vm.swappiness=10
-vm.vfs_cache_pressure=50
-vm.dirty_background_ratio=5
-vm.dirty_ratio=10
-kernel.nmi_watchdog=0
-SYSCTL
-
-
-sysctl --system || true
-
-
-echo "[+] Begrenze Journal Logs..."
-
-journalctl --vacuum-time=14d || true
-
-
 echo
-echo "================================="
-echo " Optimierung abgeschlossen"
-echo "================================="
-
-echo
-echo "Aktives Profil:"
-tuned-adm active || true
+echo "[OK] Basis-Optimierung abgeschlossen."
+echo "Hinweis: Ein Performance-Profil sollte passend zu Hardware und Nutzung manuell gewählt werden."
