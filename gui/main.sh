@@ -10,6 +10,22 @@ BOLD="\033[1m"
 UNDER="\033[4m"
 RESET="\033[0m"
 
+run_module() {
+    local path="$1"
+    if [[ ! -f "$path" ]]; then
+        echo "[FEHLER] Modul nicht gefunden: $path" >&2
+        read -r -p "ENTER zum Zurückkehren..." _ || true
+        return 1
+    fi
+    bash "$path" || {
+        local status=$?
+        echo "[FEHLER] Modul mit Exit-Code $status beendet." >&2
+        read -r -p "ENTER zum Zurückkehren..." _ || true
+        return "$status"
+    }
+    read -r -p "ENTER zum Menü..." _ || true
+}
+
 while true; do
     clear
     cat <<EOF
@@ -43,19 +59,18 @@ EOF
     echo
 
     read -r -p "$SELECT " choice || exit 0
-
     case "$choice" in
-        1) bash "$VERTHYST_SCRIPTS_DIR/full-install.sh" ;;
-        2) bash "$VERTHYST_SCRIPTS_DIR/gaming.sh" ;;
-        3) bash "$VERTHYST_SCRIPTS_DIR/programs.sh" ;;
-        4) bash "$VERTHYST_ROOT/flatpaks/flatpak.sh" ;;
-        5) bash "$VERTHYST_ROOT/drivers/driver.sh" ;;
-        6) clear; echo "$START_KERNEL"; bash "$VERTHYST_KERNELS_DIR/kernel.sh" ;;
-        7) clear; echo "$START_OPTIMIZATION"; bash "$VERTHYST_SCRIPTS_DIR/optimization.sh" ;;
-        8) clear; echo "$START_UPDATE"; bash "$VERTHYST_SCRIPTS_DIR/update.sh" ;;
-        9) clear; echo "$START_CLEANUP"; bash "$VERTHYST_SCRIPTS_DIR/cleanup.sh" ;;
-        10) systemctl reboot ;;
-        11) systemctl poweroff ;;
+        1) run_module "$VERTHYST_SCRIPTS_DIR/full-install.sh" ;;
+        2) run_module "$VERTHYST_SCRIPTS_DIR/gaming.sh" ;;
+        3) run_module "$VERTHYST_SCRIPTS_DIR/packages.sh" ;;
+        4) run_module "$VERTHYST_ROOT/flatpaks/flatpak.sh" ;;
+        5) run_module "$VERTHYST_ROOT/drivers/driver.sh" ;;
+        6) run_module "$VERTHYST_KERNELS_DIR/kernel.sh" ;;
+        7) run_module "$VERTHYST_SCRIPTS_DIR/optimization.sh" ;;
+        8) run_module "$VERTHYST_SCRIPTS_DIR/update.sh" ;;
+        9) run_module "$VERTHYST_SCRIPTS_DIR/cleanup.sh" ;;
+        10) read -r -p "System wirklich neu starten? [j/N] " answer; [[ "$answer" =~ ^([jJ]|[jJ][aA])$ ]] && systemctl reboot ;;
+        11) read -r -p "System wirklich herunterfahren? [j/N] " answer; [[ "$answer" =~ ^([jJ]|[jJ][aA])$ ]] && systemctl poweroff ;;
         0) echo "$EXIT"; exit 0 ;;
         *) echo "$INVALID"; sleep 2 ;;
     esac
