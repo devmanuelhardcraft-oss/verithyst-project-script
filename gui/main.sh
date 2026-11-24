@@ -14,13 +14,12 @@ run_module() {
     local path="$1"
     if [[ ! -f "$path" ]]; then
         echo "[FEHLER] Modul nicht gefunden: $path" >&2
-        read -r -p "ENTER zum Zurückkehren..." _ || true
-        return 1
+        read -r -p "ENTER zum Menü..." _ || true
+        return 0
     fi
     bash "$path" || {
         local status=$?
         echo "[FEHLER] Modul mit Exit-Code $status beendet." >&2
-        read -r -p "ENTER zum Zurückkehren..." _ || true
         read -r -p "ENTER zum Menü..." _ || true
     }
     return 0
