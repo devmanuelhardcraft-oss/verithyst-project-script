@@ -53,7 +53,7 @@ cd verithyst-project-script
 Start the installer:
 
 ```bash
-sudo bash install.sh
+bash install.sh
 ```
 
 ---
@@ -86,7 +86,7 @@ rm -f config/language
 Run installer:
 
 ```bash
-sudo bash install.sh
+bash install.sh
 ```
 
 ---
@@ -156,7 +156,7 @@ cd verithyst-project-script
 Installer starten:
 
 ```bash
-sudo bash install.sh
+bash install.sh
 ```
 
 ---
