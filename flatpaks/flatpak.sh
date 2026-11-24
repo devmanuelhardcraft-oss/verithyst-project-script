@@ -40,7 +40,7 @@ case "$choice" in
         ;;
     3)
         flatpak uninstall --system --unused --assumeyes
-        runuser -u "$VERTHYST_USER" -- flatpak uninstall --user --unused --assumeyes || true
+        runuser -u "$VERTHYST_USER" -- env HOME="$VERTHYST_HOME" flatpak uninstall --user --unused --assumeyes || true
         ;;
     0) exit 0 ;;
     *) echo "Ungültige Auswahl."; exit 2 ;;
