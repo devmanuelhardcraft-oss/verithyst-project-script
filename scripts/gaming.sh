@@ -34,13 +34,13 @@ fi
 
 echo "[+] Prüfe Flatpak..."
 if command -v flatpak >/dev/null 2>&1; then
-    if ! runuser -u "$GAMING_USER" -- flatpak --user remotes 2>/dev/null | grep -q flathub; then
+    if ! runuser -u "$GAMING_USER" -- env HOME="$USER_HOME" flatpak --user remotes 2>/dev/null | grep -q flathub; then
         echo "[+] Füge Flathub für Benutzer hinzu..."
-        runuser -u "$GAMING_USER" -- flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+        runuser -u "$GAMING_USER" -- env HOME="$USER_HOME" flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
     fi
 
     echo "[+] Installiere ProtonUp-Qt..."
-    if runuser -u "$GAMING_USER" -- flatpak --user install -y flathub net.davidotek.pupgui2; then
+    if runuser -u "$GAMING_USER" -- env HOME="$USER_HOME" flatpak --user install -y flathub net.davidotek.pupgui2; then
         echo "[OK] ProtonUp-Qt installiert"
     else
         echo "[WARN] ProtonUp-Qt konnte nicht installiert werden"
