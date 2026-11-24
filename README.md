@@ -22,6 +22,8 @@ It provides automated scripts to configure a complete gaming environment on Linu
 - MangoHUD support
 - Vulkan tools
 - Automated maintenance scripts
+- System diagnostics
+- Safer update, cleanup and optimization workflows
 
 ---
 
