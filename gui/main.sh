@@ -21,9 +21,9 @@ run_module() {
         local status=$?
         echo "[FEHLER] Modul mit Exit-Code $status beendet." >&2
         read -r -p "ENTER zum Zurückkehren..." _ || true
-        return "$status"
+        read -r -p "ENTER zum Menü..." _ || true
     }
-    read -r -p "ENTER zum Menü..." _ || true
+    return 0
 }
 
 while true; do
@@ -54,6 +54,7 @@ while true; do
 
 10) $MENU_10
 11) $MENU_11
+12) $MENU_12
 EOF
     echo -e "${RED}${BOLD}${UNDER}0) $EXIT${RESET}"
     echo
@@ -71,6 +72,7 @@ EOF
         9) run_module "$VERTHYST_SCRIPTS_DIR/cleanup.sh" ;;
         10) read -r -p "System wirklich neu starten? [j/N] " answer; [[ "$answer" =~ ^([jJ]|[jJ][aA])$ ]] && systemctl reboot ;;
         11) read -r -p "System wirklich herunterfahren? [j/N] " answer; [[ "$answer" =~ ^([jJ]|[jJ][aA])$ ]] && systemctl poweroff ;;
+        12) run_module "$VERTHYST_SCRIPTS_DIR/diagnostics.sh" ;;
         0) echo "$EXIT"; exit 0 ;;
         *) echo "$INVALID"; sleep 2 ;;
     esac
